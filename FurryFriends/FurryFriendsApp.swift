@@ -11,9 +11,24 @@ import SwiftUI
 struct FurryFriendsApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationView {
+            
+            TabView {
+                
                 DogView()
+                    .tabItem {
+                        Image(systemName: "heart.fill")
+                        Text("DOG")
+                    }
+                
+                CatView()
+                    .tabItem {
+                        Image(systemName: "heart")
+                        Text("CAT")
+                    }
             }
+            
+            
         }
     }
 }
+
