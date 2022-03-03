@@ -10,9 +10,16 @@ import SwiftUI
 struct DogView: View {
     
     //MARK: Stored properties
-    @State var currentImage: FurryFriend = FurryFriend(message: "", status: 0)
+    @State var currentImage: FurryFriend = FurryFriend(message: "",
+                                                       status: 0)
     
-   
+    
+    // This will keep track of our list of favourite jokes
+    @State var favourites: [FurryFriend] = []   // empty list to start
+    
+    // This will let us know whether the current exists as a favourite
+    @State var currentImageAddedToFavourites: Bool = false
+    
     //MARK: Computed properties
     
     var body: some View {
@@ -25,6 +32,22 @@ struct DogView: View {
             
             Image(systemName: "heart.circle")
                 .font(.largeTitle)
+            //                      CONDITION                        true   false
+                .foregroundColor(currentImageAddedToFavourites == true ? .red : .secondary)
+                .onTapGesture {
+                    
+                    // Only add to the list if it is not already there
+                    if currentImageAddedToFavourites == false {
+                        
+                        // Adds the current joke to the list
+                        favourites.append(currentImage)
+                        
+                        // Record that we have marked this as a favourite
+                        currentImageAddedToFavourites = true
+                        
+                    }
+                    
+                }
             
             Button(action: {
                 print("I've been pressed.")
@@ -116,11 +139,11 @@ struct DogView: View {
             //                                 DATA TYPE TO DECODE TO
             //                                         |
             //                                         V
-            currentJoke = try JSONDecoder().decode(DadJoke.self, from: data)
+            currentImage = try JSONDecoder().decode(FurryFriend.self, from: data)
             
             // Reset the flag that tracks whether the current joke
             // is a favourite
-            currentJokeAddedToFavourites = false
+            currentImageAddedToFavourites = false
             
         } catch {
             print("Could not retrieve or decode the JSON from endpoint.")
@@ -185,7 +208,7 @@ struct DogView: View {
             // Decode the data into Swift native data structures
             // Note that we use [DadJoke] since we are loading into a list (array)
             // of instances of the DadJoke structure
-            favourites = try JSONDecoder().decode([DadJoke].self, from: data)
+            favourites = try JSONDecoder().decode([FurryFriend].self, from: data)
             
         } catch {
             
